@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa interactivo de clientes de MDM</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background-color: #A7E8BD; /* Verde agua */
+        }
+        #map { height: 500px; width: 80%; margin: auto; }
+        #info-box { margin: 10px; padding: 10px; border: 1px solid #ddd; display: inline-block; background: white; }
+        table { width: 80%; margin: auto; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        input { width: 100%; border: none; padding: 5px; }
+    </style>
+</head>
+<body>
+
+    <h1>Mapa interactivo de clientes de MDM</h1>
+    <p>Haz clic en el mapa para agregar un marcador con información. <br>Haz clic derecho en un marcador para eliminarlo.</p>
+    
+    <div id="info-box">
+        <label for="info">Texto para el marcador:</label>
+        <input type="text" id="info" placeholder="Escribe algo...">
+        <button onclick="enableMarkerMode()">Añadir marcador</button>
+    </div>
+
+    <div id="map"></div>
+
+    <h3>Clientes con compra en Tonadita</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Número de zona</th>
+                <th>Clientes activos</th>
+                <th>Clientes con compra</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+
+            <tr>
+                <td contenteditable="true">Zona 1</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 2</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 3</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 4</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 5</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 6</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 7</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 8</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 9</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 10</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 11</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 12</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 13</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 14</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 15</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 16</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 17</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 18</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 19</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+            <tr>
+                <td contenteditable="true">Zona 20</td>
+                <td contenteditable="true">0</td>
+                <td contenteditable="true">0</td>
+            </tr>
+    
+        </tbody>
+    </table>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <script>
+        var map = L.map('map').setView([-31.4201, -64.1888], 7); // Coordenadas de Córdoba
+
+        // Agregar mapa base de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Configurar herramienta de edición
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+
+        var drawControl = new L.Control.Draw({
+            edit: { featureGroup: drawnItems },
+            draw: { polygon: true, marker: true }
+        });
+        map.addControl(drawControl);
+
+        // Habilitar modo marcador con texto
+        var markerMode = false;
+        function enableMarkerMode() {
+            markerMode = true;
+            alert("Haz clic en el mapa para colocar tu marcador.");
+        }
+
+        // Agregar marcador con texto ingresado
+        map.on('click', function (e) {
+            if (markerMode) {
+                var userText = document.getElementById("info").value || "Sin descripción";
+                var marker = L.marker(e.latlng).addTo(map).bindPopup(userText).openPopup();
+
+                // Agregar a la tabla
+                var table = document.getElementById("table-body");
+                var row = table.insertRow();
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+
+                cell1.innerHTML = "Zona " + (table.rows.length); // Número de zona automático
+                cell2.innerHTML = "0"; // Clientes activos (editable)
+                cell3.innerHTML = "0"; // Clientes con compra (editable)
+
+                cell1.contentEditable = "true";
+                cell2.contentEditable = "true";
+                cell3.contentEditable = "true";
+
+                // Permitir eliminar el marcador con clic derecho
+                marker.on('contextmenu', function() {
+                    map.removeLayer(marker);
+                });
+
+                markerMode = false;
+            }
+        });
+    </script>
+
+</body>
+</html>
